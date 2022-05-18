@@ -1,7 +1,14 @@
-import turtle
+from tkinter import *
+import turtle as turtle
 
 
 def toBinary(a):
+    """
+    It converts a string into a list of binary numbers
+
+    :param a: the string to be converted to binary
+    :return: A list of binary numbers
+    """
     l = []
     m = []
     result = []
@@ -16,6 +23,13 @@ def toBinary(a):
 
 
 def remplissage(texteBinaire):
+    """
+    It adds a 2 and a 3 to the beginning and end of the binary string, respectively, and adds zeros to
+    the beginning of the string until it is 8 characters long.
+
+    :param texteBinaire: the binary string to be padded
+    :return: a string of 8 bits.
+    """
     result = texteBinaire
 
     while(len(result) < 8):
@@ -26,72 +40,109 @@ def remplissage(texteBinaire):
 
 
 def getFullMessage(texte):
+    """
+    It takes a string, converts it to binary, converts the length of the string to binary, and then adds
+    the length of the string to the beginning of the binary string.
+
+    :param texte: the text to be converted to binary
+    :return: The full message in binary
+    """
     texteBinaire = toBinary(texte)
     lenMessage = len(texte)
 
     lenBinaire = bin(lenMessage)
     lenBinaire = lenBinaire[2:]
 
-    print(f'Message in alphabetic : {texte}')
-    print(f'Lenght message in algebric : {lenMessage}')
-    print(f'Message in binary : {texteBinaire}')
-    print(f'Lenght message in binary : {lenBinaire}')
+    # Debugging
+    #print(f'Message in alphabetic : {texte}')
+    #print(f'Lenght message in algebric : {lenMessage}')
+    #print(f'Message in binary : {texteBinaire}')
+    #print(f'Lenght message in binary : {lenBinaire}')
 
     result = remplissage(lenBinaire)
-    print(f'Lenght message in binary : {result}')
-    for i in texteBinaire:
-        result = result + remplissage(i)
-    for i in texteBinaire:
-        result = result + remplissage(i)
-    print(f'Full message in binary : {result}')
+    #print(f'Lenght message in binary : {result}')
+    for j in range(4):
+        for i in texteBinaire:
+            result = result + remplissage(i)
+    #print(f'Full message in binary : {result}')
     return result
 
 
 def main():
-    # !!!!!!!!!!!!!!!!! A FAIRE !!!!!!!!!!!!!!!!!
-    # - Permettre d'avoir une palette de couleurs prédéfinies.
-    # - Banque de données de Langue permettant de déterminer le mot si il y a des erreurs.
-    # - Donner assez d'informations dans le QR Code afin de pouvoir détecter les erreurs lors de la lecture (Code de Hamming pour la détection des erreurs).
-
-    tur = turtle.Turtle()
-    # Fenetre de dessin
-    wn = tur.screen
-
-    # Arrete les mises à jour de l'écran
-    wn.tracer(0)
-
-    # Ton dessin
-    r = 10
+    # Variables
     test = len(motEncode) // 10
-    tur.speed(10)
-    for i in motEncode:
-        tur.pu()
+    r = 5
+    decalage = 10
+    index = 0
 
-        for j in range(test):
-            tur.circle(r * j)
-            tur.up()
-            tur.sety((r * j)*(-1))
-            tur.down()
+    # Turtle options
+    turtle.hideturtle()
+    tur = turtle.Turtle()
+    tur.hideturtle()
+    tur.pensize(0.05)
 
-        tur.color("black", coloriage[int(i)])
-        tur.pd()
-        tur.begin_fill()
-        tur.circle(r//2)
-        tur.end_fill()
+    # Window options
+    wn = turtle.getscreen()
+    wn.screensize(5*len(motEncode), 5*len(motEncode))
+    wn.bgcolor("white")
+    wn.tracer(0)  # stop window refreshing
+    tur.speed(10)  # controls turtle's speed
 
-    # Mise à jour de la fenêtre
+    # List of colours
+    color = ["white", "black", "magenta", "cyan"]
+
+    # Drawing
+    tur.pu()
+    for j in range(1, (test + 2)):
+        tur.sety(((r * j)*(-1)))
+        if(j == 1):
+            for i in range(10):  # 0 to 10
+                tur.circle(r * j, extent=360/10)  # 36
+                tur.pd()
+                tur.color("orange")
+                tur.circle(r/2)
+                tur.up()
+        else:
+            # tur.pd()
+            tur.circle(r * j, extent=-(decalage * j))
+            for i in range(10):  # 0 to 10
+                # Start little circle
+                tur.circle(r * j, extent=360/10)  # 36
+                tur.pd()
+                # Compute color's value
+                tur.begin_fill()
+                if(motEncode[index] == "0"):
+                    tur.color("black", color[0])
+                elif(motEncode[index] == "1"):
+                    tur.color("black", color[1])
+                elif(motEncode[index] == "2"):
+                    tur.color("black", color[2])
+                else:
+                    tur.color("black", color[3])
+                tur.circle(r/2)
+                tur.end_fill()
+                # End little circle
+                tur.up()
+                index += 1
+            tur.circle(r * j, extent=(decalage * j))
+
+    # Window update
     wn.update()
 
-    # Garde la fenentre ouverte après execution
-    wn.mainloop()
+    # Image export
+    ts = turtle.getscreen()
+    ts.getcanvas().postscript(file="galaxycode.eps")
+
+    # Show turtle
+    turtle.ontimer(main, 250)
+    turtle.done()
 
 
+# Execution
 texte = input("Entrez votre mot: ")[:1024]
-
-coloriage = ["white", "black", "cyan", "magenta"]
+print("Votre GalaxyCode a été exporté sous le nom 'galaxycode.eps'.\n")
 
 texteBinaire = toBinary(texte)
-
 motEncode = getFullMessage(texte)
 
 main()
