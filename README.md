@@ -1,3 +1,3 @@
-# custom-qr-code
+# Custom QR Code protocol
 Custom QR Code
 
