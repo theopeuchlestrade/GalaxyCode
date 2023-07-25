@@ -22,15 +22,15 @@ def toBinary(a):
     return result
 
 
-def remplissage(texteBinaire):
+def filling(binaryText):
     """
     It adds a 2 and a 3 to the beginning and end of the binary string, respectively, and adds zeros to
     the beginning of the string until it is 8 characters long.
 
-    :param texteBinaire: the binary string to be padded
+    :param binaryText: the binary string to be padded
     :return: a string of 8 bits.
     """
-    result = texteBinaire
+    result = binaryText
 
     while(len(result) < 8):
         result = "0" + result
@@ -39,40 +39,40 @@ def remplissage(texteBinaire):
     return result
 
 
-def getFullMessage(texte):
+def getFullMessage(text):
     """
     It takes a string, converts it to binary, converts the length of the string to binary, and then adds
     the length of the string to the beginning of the binary string.
 
-    :param texte: the text to be converted to binary
+    :param text: the text to be converted to binary
     :return: The full message in binary
     """
-    texteBinaire = toBinary(texte)
-    lenMessage = len(texte)
+    binaryText = toBinary(text)
+    lenMessage = len(text)
 
-    lenBinaire = bin(lenMessage)
-    lenBinaire = lenBinaire[2:]
+    lenBinary = bin(lenMessage)
+    lenBinary = lenBinary[2:]
 
     # Debugging
-    #print(f'Message in alphabetic : {texte}')
+    #print(f'Message in alphabetic : {text}')
     #print(f'Lenght message in algebric : {lenMessage}')
-    #print(f'Message in binary : {texteBinaire}')
-    #print(f'Lenght message in binary : {lenBinaire}')
+    #print(f'Message in binary : {binaryText}')
+    #print(f'Lenght message in binary : {lenBinary}')
 
-    result = remplissage(lenBinaire)
+    result = filling(lenBinary)
     #print(f'Lenght message in binary : {result}')
     for j in range(4):
-        for i in texteBinaire:
-            result = result + remplissage(i)
+        for i in binaryText:
+            result = result + filling(i)
     #print(f'Full message in binary : {result}')
     return result
 
 
 def main():
     # Variables
-    test = len(motEncode) // 10
+    test = len(encodedWord) // 10
     r = 5
-    decalage = 10
+    offset = 10
     index = 0
 
     # Turtle options
@@ -83,7 +83,7 @@ def main():
 
     # Window options
     wn = turtle.getscreen()
-    wn.screensize(5*len(motEncode), 5*len(motEncode))
+    wn.screensize(5*len(encodedWord), 5*len(encodedWord))
     wn.bgcolor("white")
     wn.tracer(0)  # stop window refreshing
     tur.speed(10)  # controls turtle's speed
@@ -104,18 +104,18 @@ def main():
                 tur.up()
         else:
             # tur.pd()
-            tur.circle(r * j, extent=-(decalage * j))
+            tur.circle(r * j, extent=-(offset * j))
             for i in range(10):  # 0 to 10
                 # Start little circle
                 tur.circle(r * j, extent=360/10)  # 36
                 tur.pd()
                 # Compute color's value
                 tur.begin_fill()
-                if(motEncode[index] == "0"):
+                if(encodedWord[index] == "0"):
                     tur.color("black", color[0])
-                elif(motEncode[index] == "1"):
+                elif(encodedWord[index] == "1"):
                     tur.color("black", color[1])
-                elif(motEncode[index] == "2"):
+                elif(encodedWord[index] == "2"):
                     tur.color("black", color[2])
                 else:
                     tur.color("black", color[3])
@@ -124,7 +124,7 @@ def main():
                 # End little circle
                 tur.up()
                 index += 1
-            tur.circle(r * j, extent=(decalage * j))
+            tur.circle(r * j, extent=(offset * j))
 
     # Window update
     wn.update()
@@ -139,10 +139,12 @@ def main():
 
 
 # Execution
-texte = input("Entrez votre mot: ")[:1024]
-print("Votre GalaxyCode a été exporté sous le nom 'galaxycode.eps'.\n")
+text = input("Enter yout word: ")[:1024]
+print("Your GalaxyCode has been exported under the name 'galaxycode.eps'.\n")
 
-texteBinaire = toBinary(texte)
-motEncode = getFullMessage(texte)
+binaryText = toBinary(text)
+encodedWord = getFullMessage(text)
 
 main()
+
+exit(0)
